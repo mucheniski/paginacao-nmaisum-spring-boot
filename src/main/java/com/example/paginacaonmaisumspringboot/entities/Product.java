@@ -1,6 +1,7 @@
 package com.example.paginacaonmaisumspringboot.entities;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,10 +25,24 @@ public class Product {
     private Long id;
     private String name;
 
+    /*
+        https://stackoverflow.com/questions/69804273/ignite-2-10-0-org-h2-jdbc-jdbcsqlexception-function-lock-mode-not-found
+        @EqualsAndHashCode.Exclude precisa ser adicionado para evitar o erro de java.lang.StackOverflowError\r\n\tat org.h2.command.Parser.readIf
+     */
+    @EqualsAndHashCode.Exclude
     @ManyToMany
     @JoinTable(name = "tb_product_category",
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     Set<Category> categories = new HashSet<>();
+
+    public Product() {
+    }
+
+    public Product(Long id, String name) {
+        super();
+        this.id = id;
+        this.name = name;
+    }
 
 }
