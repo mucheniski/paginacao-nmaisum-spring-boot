@@ -9,6 +9,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class ProductService {
 
@@ -16,8 +19,8 @@ public class ProductService {
     private ProductRepository repository;
 
     @Transactional(readOnly = true)
-    public Page<ProductDTO> find(PageRequest pageRequest) {
-        Page<Product> list = repository.findAll(pageRequest);
-        return list.map(x -> new ProductDTO(x));
+    public List<ProductDTO> find(PageRequest pageRequest) {
+        List<Product> products = repository.findProcutsWithCategories();
+        return products.stream().map(product -> new ProductDTO(product)).collect(Collectors.toList());
     }
 }
